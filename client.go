@@ -13,6 +13,7 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
+	"net/http/httputil"
 )
 
 type Client struct {
@@ -67,6 +68,12 @@ func (c *Client) GetCtx(ctx context.Context, path string, args Arguments) (forec
 		err = errors.Wrap(err, "create request")
 		return
 	}
+
+	b, err := httputil.DumpRequestOut(req, true)
+	if err != nil {
+	    panic(err)
+	}
+	fmt.Println("DEBUG:\n" + string(b))
 
 	resp, err := c.client.Do(req.WithContext(ctx))
 	if err != nil {
